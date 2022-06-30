@@ -44,6 +44,11 @@ function App() {
         filterTask = task1.filter(t => t.isDone)
     }
 
+    const changeStatus = (checkId: string, isDone: boolean) => {
+        let newTask = task1.map(t => t.id === checkId ? {...t, isDone} : t)
+        setTask1(newTask)
+    }
+
     return (
         <div className={'app'}>
             <TodoHome
@@ -52,6 +57,8 @@ function App() {
                 removeTask={removeTaskHandler}
                 changeFilter={changeFilter}
                 addTask={addTask}
+                changeStatus={changeStatus}
+                filter={filter}
             />
 
         </div>

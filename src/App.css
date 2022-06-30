@@ -1,2 +1,16 @@
+.error {
+    border: 1px solid red;
+    outline: none;
+}
 
+.error-message {
+    color: red;
+}
 
+.active-filter {
+    background-color: rgba(0, 123, 210, 0.59);
+}
+
+.is-done {
+    opacity: 0.5;
+}
