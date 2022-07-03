@@ -8,13 +8,15 @@ export type TaskType = {
 }
 
 type TaskPropsType = {
+    id: string
     title: string
     tasks: Array<TaskType>
-    removeTask: (taskId: string) => void
-    changeFilter: (value: wordFiltered) => void
-    addTask: (title: string) => void
-    changeStatus: (checkId: string, isDone: boolean) => void
+    removeTask: (todoId: string, taskId: string) => void
+    changeFilter: (todoId: string, value: wordFiltered) => void
+    addTask: (todoId: string, title: string) => void
+    changeStatus: (todoId: string, checkId: string, isDone: boolean) => void
     filter: wordFiltered
+    removeTodoList: (todoListId: string) => void
 }
 
 export const TodoHome = (props: TaskPropsType) => {
@@ -23,29 +25,30 @@ export const TodoHome = (props: TaskPropsType) => {
 
     let taskRender = props.tasks.length
         ? props.tasks.map(t => {
-        const clickRemoveTaskHandler = (taskId: string) => {
-            props.removeTask(taskId)
-        }
-        const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-            let newIsDonValue = e.currentTarget.checked;
-            props.changeStatus(t.id, newIsDonValue)
-        }
-        return (
-            <li key={t.id} className={t.isDone ? 'is-done' : ''}>
-                <input
-                    type={"checkbox"}
-                    checked={t.isDone}
-                    onChange={onChangeHandler}
-                />
-                <span>{t.title}</span>
-                <button onClick={ () =>  clickRemoveTaskHandler(t.id) }>x</button>
-            </li>
-        );
-    }) : <span>Тасок больше нет</span>
+            const clickRemoveTaskHandler = (todoId: string, taskId: string) => {
+                props.removeTask(todoId, taskId)
+            }
+            const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+                let newIsDonValue = e.currentTarget.checked;
+                props.changeStatus(props.id, t.id, newIsDonValue)
+            }
+            return (
+                <li key={t.id} className={t.isDone ? 'is-done' : ''}>
+                    <input
+                        type={"checkbox"}
+                        checked={t.isDone}
+                        onChange={onChangeHandler}
+                    />
+                    <span>{t.title}</span>
+                    <button onClick={ () =>  clickRemoveTaskHandler(props.id , t.id) }>x</button>
+                </li>
+            );
+        })
+        : <span>Тасок больше нет</span>
 
-    const addTaskHandler = (title: string) => {
+    const addTaskHandler = (todoId: string, title: string) => {
         if (title.trim() !== '') {
-            props.addTask(title)
+            props.addTask(todoId, title)
             setTitle('')
         } else {
             setError('Title is required')
@@ -59,17 +62,24 @@ export const TodoHome = (props: TaskPropsType) => {
     const KeyDownTitleHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         setError(null)
         if (e.key === 'Enter') {
-            addTaskHandler(title)
+            addTaskHandler(props.id, title)
         }
     }
 
-    const filterChangeHandler = (value: wordFiltered) => {
-        props.changeFilter(value)
+    const filterChangeHandler = (todoId: string, value: wordFiltered) => {
+        props.changeFilter(todoId, value)
+    }
+
+    const removeTodoListHandler = () => {
+        props.removeTodoList(props.id)
     }
 
     return (
         <div>
-            <h3>{props.title}</h3>
+            <h3>
+                {props.title}
+                <button onClick={removeTodoListHandler}>X</button>
+            </h3>
             <div>
                 <input
                     className={error ? 'error' : ''}
@@ -77,7 +87,7 @@ export const TodoHome = (props: TaskPropsType) => {
                     onChange={ onchangeTitleHandler }
                     onKeyDown={ KeyDownTitleHandler }
                 />
-                <button onClick={ () => addTaskHandler(title)}>+</button>
+                <button onClick={ () => addTaskHandler(props.id, title)}>+</button>
                 {error && <div className={'error-message'}>{error}</div>}
             </div>
             <ul>
@@ -86,15 +96,15 @@ export const TodoHome = (props: TaskPropsType) => {
             <div>
                 <button
                     className={props.filter === 'All' ? 'active-filter' : ''}
-                    onClick={ () => filterChangeHandler('All')}>All
+                    onClick={ () => filterChangeHandler(props.id, 'All')}>All
                 </button>
                 <button
                     className={props.filter === 'Active' ? 'active-filter' : ''}
-                    onClick={ () => filterChangeHandler('Active')}>Active
+                    onClick={ () => filterChangeHandler(props.id, 'Active')}>Active
                 </button>
                 <button
                     className={props.filter === 'Completed' ? 'active-filter' : ''}
-                    onClick={ () => filterChangeHandler('Completed')}>Completed
+                    onClick={ () => filterChangeHandler(props.id, 'Completed')}>Completed
                 </button>
             </div>
         </div>
