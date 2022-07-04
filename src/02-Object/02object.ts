@@ -6,7 +6,7 @@ type TechType = {
     id: number
     title: string
 }
-type StudentType = {
+export type StudentType = {
     id: number
     name: string
     age: number
@@ -19,7 +19,7 @@ type AddressType = {
     city: LocalCityType
 }
 
-const student: StudentType = {
+export const student: StudentType = {
     id: 1,
     name: 'Vit',
     age: 41,
