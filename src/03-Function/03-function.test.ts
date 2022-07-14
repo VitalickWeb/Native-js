@@ -35,7 +35,7 @@ beforeEach(() => {
         ]
     }
 })
-test('new tech skill should be added to student', () => {
+test.skip('new tech skill should be added to student', () => {
     expect(student.technologies.length).toBe(4)
 
     addTechnologies(student, 'REDUX')
@@ -45,7 +45,7 @@ test('new tech skill should be added to student', () => {
     expect(student.technologies[4].id).toBeDefined()//определяем существование id
 })
 
-test('student status should be active', () => {
+test.skip('student status should be active', () => {
     expect(student.status).toBe(true)
 
     makeStudentStatusActive(student)
@@ -53,7 +53,7 @@ test('student status should be active', () => {
 
 })
 
-test('does student lives in the city Minsk?', () => {
+test.skip('does student lives in the city Minsk?', () => {
     expect(student.address.city.title).toBe('Minsk')
 
     let res1 = doesStudentLivesIn(student, 'Minsk')
