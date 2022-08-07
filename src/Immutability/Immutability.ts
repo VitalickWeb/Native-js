@@ -1,8 +1,32 @@
 export type UserType = {
     name: string
     hair: number
-    address: { title: string }
+    address: {
+        title: string
+    }
     laptop: { manufacturer: string }
+}
+
+export type BooksUserType = {
+    name: string
+    hair: number
+    address: {
+        title: string
+        house: number
+    }
+    laptop: { manufacturer: string }
+    books: Array<string>
+}
+
+export type SkillsUserType = {
+    name: string
+    hair: number
+    address: {
+        title: string
+        house: number
+    }
+    laptop: { manufacturer: string }
+    skills: Array<number>
 }
 
 export function getHaircut(u: UserType, power: number) {
@@ -24,4 +48,20 @@ export function upgradeToMacbook(u: UserType, laptop: string) {
     copyNote3.laptop.manufacturer = laptop
 
     return copyNote3
+}
+
+export function addBooksForUser(u: BooksUserType, books: string) {
+    return {...u, books: [...u.books, books]}
+}
+
+export function updateBookForUser(u: BooksUserType, bookJS: string, bookTS: string) {
+    let copyBook = {...u, books: u.books.map(b => b === bookJS ? bookTS : b)}
+
+    return copyBook
+}
+
+export function updateSkillForUser(u: SkillsUserType, oldSkills: number, newSkill: number) {
+    let copySkill = {...u, skills: u.skills.map(b => b === oldSkills ? newSkill : b)}
+
+    return copySkill
 }
