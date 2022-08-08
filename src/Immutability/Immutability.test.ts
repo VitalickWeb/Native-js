@@ -1,10 +1,10 @@
 import {
     addBooksForUser,
-    BooksUserType,
+    BooksUserType, deleteBook, errorCompany,
     getHaircut,
-    moveUser, SkillsUserType,
-    updateBookForUser, updateSkillForUser,
-    upgradeToMacbook,
+    moveUser, RemoveBooksUserType, SkillsUserType,
+    updateBookForUser, UpdateCompaniesType, updateCompanyTitle, updateSkillForUser,
+    upgradeToMacbook, UserCompaniesType,
     UserType
 } from "./Immutability";
 
@@ -26,7 +26,6 @@ test.skip('reference type test', () => {
     expect(handsomeUser.hair).toBe(16)
     expect(handsomeUser.address.title).toBe('Taiwan')
 })
-
 test.skip('change address', () => {
     let user: UserType = {
         name: 'Vit',
@@ -63,7 +62,6 @@ test.skip('upgrade laptop to macbook', () => {
     expect(user.address).toBe(upgradeLaptop.address)
     expect(user.laptop).not.toBe(upgradeLaptop.laptop)
 })
-
 test.skip('add books for user', () => {
     let user: BooksUserType = {
         name: 'Vit',
@@ -84,8 +82,6 @@ test.skip('add books for user', () => {
     expect(addBooks.books[4]).toBe('ts')
     expect(user.books.length).toBe(4)
 })
-
-
 test.skip('update js to ts books for user', () => {
     let user: BooksUserType = {
         name: 'Vit',
@@ -106,8 +102,6 @@ test.skip('update js to ts books for user', () => {
     expect(addBooks.books[2]).toBe('ts')
     expect(user.books.length).toBe(4)
 })
-
-
 test.skip('skills for user levels', () => {
     let user: SkillsUserType = {
         name: 'Vit',
@@ -128,10 +122,28 @@ test.skip('skills for user levels', () => {
     expect(updateSkill.skills[0]).toBe(80)
     expect(user.skills.length).toBe(5)
 })
+test.skip('remove book by js', () => {
+    let user: RemoveBooksUserType = {
+        name: 'Vit',
+        hair: 32,
+        address: {
+            title: 'Taiwan',
+        },
+        laptop: {
+            manufacturer: 'MedIon'
+        },
+        books: ['css', 'html', 'js', 'react'],
+    }
 
+    const removeBook = deleteBook(user, 'js')
 
-test('remove book by js', () => {
-    let user: SkillsUserType = {
+    expect(user.books).not.toBe(removeBook.books)
+    expect(removeBook.books[2]).toBe('react')
+    expect(removeBook.books.length).toBe(3)
+    expect(user.books.length).toBe(4)
+})
+test.skip('change name for company', () => {
+    let user: UserCompaniesType = {
         name: 'Vit',
         hair: 32,
         address: {
@@ -141,12 +153,37 @@ test('remove book by js', () => {
         laptop: {
             manufacturer: 'MedIon'
         },
-        skills: [15, 25, 30, 35, 50],
+        companies: [
+            {id:1, title: 'Епам'},
+            {id:2, title: 'Crazy Sound'},
+        ],
     }
 
-    const updateSkill = updateSkillForUser(user, 15, 80)
+    const copyCompany = errorCompany(user, 1,'EPAM')
 
-    expect(user.skills).not.toBe(updateSkill.skills)
-    expect(updateSkill.skills[0]).toBe(80)
-    expect(user.skills.length).toBe(5)
+    expect(user.companies).not.toBe(copyCompany.companies)
+    expect(copyCompany.companies[0].title).toBe('EPAM')
+    expect(copyCompany.companies.length).toBe(2)
+    expect(user.companies.length).toBe(2)
 })
+
+test('update company', () => {
+    let companies: UpdateCompaniesType = {
+        'Vit': [
+            {id: 1, title: 'EPAM'},
+            {id: 2, title: 'Google'},
+            {id: 3, title: 'Matrix'}
+        ],
+        'Dima': [
+            {id: 1, title: 'IT-INCUBATOR'}
+        ]
+    }
+
+    const copyCompany = updateCompanyTitle(companies, 'Vit',3,'Victory')
+
+    expect(companies.Vit).not.toBe(copyCompany.Vit)
+    expect(copyCompany.Vit[2].title).toBe('Victory')
+    expect(copyCompany.Vit.length).toBe(3)
+    expect(companies.Vit.length).toBe(3)
+})
+
